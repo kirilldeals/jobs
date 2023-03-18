@@ -61,7 +61,7 @@ namespace TicTacToeAPI.Controllers
         {
             if (row < 1 || row > 3 || col < 1 || col > 3)
             {
-                return BadRequest("Values should be within the range of 1-3");
+                return BadRequest("Values should be in the range of 1 - 3");
             }
 
             var game = games.FirstOrDefault(x => x.Id == id);
@@ -73,12 +73,12 @@ namespace TicTacToeAPI.Controllers
             {
                 return BadRequest($"The game has been finished");
             }
-            if (!game.IsCellEmpty(row-1,col-1, out string player))
+            if (!game.IsCellEmpty(row - 1, col - 1, out string player))
             {
                 return BadRequest($"Player \"{player}\" already made a move in the cell ({row},{col})");
             }
 
-            game.Move(row-1, col-1);
+            game.Move(row - 1, col - 1);
             return Ok(game);
         }
     }
