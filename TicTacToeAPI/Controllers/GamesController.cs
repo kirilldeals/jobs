@@ -78,7 +78,7 @@ namespace TicTacToeAPI.Controllers
             return Ok(game);
         }
 
-        [HttpDelete("{id:length(24)}")]
+        [HttpDelete("delete/{id:length(24)}")]
         public IActionResult DeleteGame(string id)
         {
             var game = _gamesService.Get(id);
