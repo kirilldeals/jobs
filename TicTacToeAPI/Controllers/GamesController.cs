@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TicTacToeAPI.Models;
+using TicTacToeAPI.Services;
 
 namespace TicTacToeAPI.Controllers
 {
@@ -11,36 +12,29 @@ namespace TicTacToeAPI.Controllers
     [Route("/api/[controller]")]
     public class GamesController : Controller
     {
-        static List<Game> games = new List<Game> 
-        {
-            new Game(),
-            new Game(),
-            new Game()
-        };
+        private readonly GamesService _gamesService;
 
+        public GamesController(GamesService gamesService)
+        {
+            _gamesService = gamesService;
+        }
 
         [HttpGet]
         public IActionResult GetGames()
         {
-            return Ok(games);
+            return Ok(_gamesService.Get());
         }
 
         [HttpGet("getByGameState")]
-        public IActionResult GetGamesWithGameState([FromQuery] GameState state)
+        public IActionResult GetGamesByGameState([FromQuery] GameState state)
         {
-            return Ok(games.Where(g => g.State == state));
+            return Ok(_gamesService.Where(g => g.GameState == state));
         }
 
-        [HttpGet("getByCurrentPlayer")]
-        public IEnumerable<Game> GetGamesWithCurrentPlayer([FromQuery] Player player)
+        [HttpGet("{id:length(24)}")]
+        public IActionResult GetGame(string id)
         {
-            return games.Where(g => g.CurrentPlayer == player);
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetGame(Guid id)
-        {
-            var game = games.FirstOrDefault(x => x.Id == id);
+            var game = _gamesService.Get(id);
             if (game == null)
             {
                 return NotFound();
@@ -52,19 +46,19 @@ namespace TicTacToeAPI.Controllers
         public IActionResult CreateGame()
         {
             var game = new Game();
-            games.Add(game);
-            return Ok(game);
+            _gamesService.Create(game);
+            return CreatedAtAction(nameof(GetGame), new { game.Id }, game);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult MakeMove(Guid id, [Required] int row, [Required] int col)
+        [HttpPut("{id:length(24)}")]
+        public IActionResult MakeMove(string id, [Required] int row, [Required] int col)
         {
             if (row < 1 || row > 3 || col < 1 || col > 3)
             {
                 return BadRequest("Values should be in the range of 1 - 3");
             }
 
-            var game = games.FirstOrDefault(x => x.Id == id);
+            var game = _gamesService.Get(id);
             if (game == null)
             {
                 return NotFound();
@@ -79,6 +73,23 @@ namespace TicTacToeAPI.Controllers
             }
 
             game.Move(row - 1, col - 1);
+            _gamesService.Update(id, game);
+
+            return Ok(game);
+        }
+
+        [HttpDelete("{id:length(24)}")]
+        public IActionResult DeleteGame(string id)
+        {
+            var game = _gamesService.Get(id);
+
+            if (game is null)
+            {
+                return NotFound();
+            }
+
+            _gamesService.Remove(id);
+
             return Ok(game);
         }
     }

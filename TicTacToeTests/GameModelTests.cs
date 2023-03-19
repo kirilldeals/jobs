@@ -32,7 +32,7 @@ namespace TicTacToeTests
             game.Move(2, 0);
             game.Move(1, 2);
 
-            Assert.That(game.State, Is.EqualTo(GameState.OWin));
+            Assert.That(game.GameState, Is.EqualTo(GameState.OWin));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace TicTacToeTests
             game.Move(0, 2);
             game.Move(2, 1);
 
-            Assert.That(game.State, Is.EqualTo(GameState.OWin));
+            Assert.That(game.GameState, Is.EqualTo(GameState.OWin));
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace TicTacToeTests
 
             game.Move(2, 2);
 
-            Assert.That(game.State, Is.EqualTo(GameState.XWin));
+            Assert.That(game.GameState, Is.EqualTo(GameState.XWin));
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace TicTacToeTests
             game.Move(2, 2);
             game.Move(2, 0);
 
-            Assert.That(game.State, Is.EqualTo(GameState.OWin));
+            Assert.That(game.GameState, Is.EqualTo(GameState.OWin));
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace TicTacToeTests
 
             game.Move(2, 2);
 
-            Assert.That(game.State, Is.EqualTo(GameState.Tie));
+            Assert.That(game.GameState, Is.EqualTo(GameState.Tie));
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace TicTacToeTests
 
             game.Move(2, 2);
 
-            Assert.That(game.State, Is.EqualTo(GameState.XWin));
+            Assert.That(game.GameState, Is.EqualTo(GameState.XWin));
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace TicTacToeTests
 
             game.Move(1, 0);
 
-            Assert.That(game.State, Is.EqualTo(GameState.InProgress));
+            Assert.That(game.GameState, Is.EqualTo(GameState.InProgress));
             Assert.That(game.Field[1,0], Is.EqualTo('O'));
         }
 
@@ -155,7 +155,7 @@ namespace TicTacToeTests
             game.Move(0, 2);
             game.Move(1, 2);
 
-            Assert.That(game.State, Is.EqualTo(GameState.XWin));
+            Assert.That(game.GameState, Is.EqualTo(GameState.XWin));
             Assert.That(game.Field[1,2], Is.EqualTo('.'));
         }
     }

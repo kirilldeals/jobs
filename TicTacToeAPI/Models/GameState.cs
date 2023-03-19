@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace TicTacToeAPI.Models
+﻿namespace TicTacToeAPI.Models
 {
     public enum GameState
     {

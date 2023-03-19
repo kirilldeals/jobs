@@ -1,6 +1,7 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
 
@@ -8,17 +9,22 @@ namespace TicTacToeAPI.Models
 {
     public class Game
     {
-        public Guid Id { get; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? Id { get; set; }
         [JsonIgnore]
-        public char[,] Field { get; }
+        [BsonElement("field")]
+        public char[,] Field { get; private set; }
+        [BsonElement("currentPlayer")]
         public Player CurrentPlayer { get; private set; }
-        public GameState State { get; private set; }
+        [BsonElement("gameState")]
+        public GameState GameState { get; private set; }
 
-        [JsonPropertyName("Field")]
+        [JsonPropertyName("field")]
         public string[] JsonField {
             get
             {
-                var jsonArr = new string[3];
+                var jsonArr = new string[Field.GetLength(0)];
                 for (int i = 0; i < Field.GetLength(0); i++)
                 {
                     string row = "";
@@ -34,7 +40,6 @@ namespace TicTacToeAPI.Models
 
         public Game()
         {
-            Id = Guid.NewGuid();
             Field = new char[3,3];
             for (int i = 0; i < Field.GetLength(0); i++)
             {
@@ -44,7 +49,7 @@ namespace TicTacToeAPI.Models
                 }
             }
             CurrentPlayer = Player.X;
-            State = GameState.InProgress;
+            GameState = GameState.InProgress;
         }
 
         public void Move(int row, int col)
@@ -55,7 +60,7 @@ namespace TicTacToeAPI.Models
             UpdateGameState(row, col);
         }
 
-        public bool IsGameFinished() => State != GameState.InProgress;
+        public bool IsGameFinished() => GameState != GameState.InProgress;
         public bool IsCellEmpty(int row, int col) => Field[row,col] == '.';
         public bool IsCellEmpty(int row, int col, out string player)
         {
@@ -73,7 +78,7 @@ namespace TicTacToeAPI.Models
             }
             else if (!Field.Cast<char>().Any(c => c == '.'))
             {
-                State = GameState.Tie;
+                GameState = GameState.Tie;
                 CurrentPlayer = Player.None;
             }
             else
@@ -125,7 +130,7 @@ namespace TicTacToeAPI.Models
 
         private bool FinishGame()
         {
-            State = CurrentPlayer == Player.X ? GameState.XWin : GameState.OWin;
+            GameState = CurrentPlayer == Player.X ? GameState.XWin : GameState.OWin;
             CurrentPlayer = Player.None;
             return true;
         }
