@@ -11,11 +11,11 @@ namespace TicTacToeAPI.Services
     {
         private readonly IMongoCollection<Game> _gamesCollection;
 
-        public GamesService(IOptions<TictactoeDatabaseSettings> bookStoreDatabaseSettings)
+        public GamesService(IOptions<TictactoeDatabaseSettings> tictactoeDatabaseSettings)
         {
-            var mongoClient = new MongoClient(bookStoreDatabaseSettings.Value.ConnectionString);
-            var mongoDatabase = mongoClient.GetDatabase(bookStoreDatabaseSettings.Value.DatabaseName);
-            _gamesCollection = mongoDatabase.GetCollection<Game>(bookStoreDatabaseSettings.Value.CollectionName);
+            var mongoClient = new MongoClient(tictactoeDatabaseSettings.Value.ConnectionString);
+            var mongoDatabase = mongoClient.GetDatabase(tictactoeDatabaseSettings.Value.DatabaseName);
+            _gamesCollection = mongoDatabase.GetCollection<Game>(tictactoeDatabaseSettings.Value.CollectionName);
         }
 
         public List<Game> Get()

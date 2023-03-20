@@ -3,6 +3,7 @@
 + ASP.NET Core
 + База данных MongoDB
 + MongoDB.Driver драйвер .NET для MongoDB
++ Docker Compose
 
 ## Входные и выходные данные
 ### Параметры ответа
